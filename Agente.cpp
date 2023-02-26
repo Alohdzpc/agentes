@@ -63,31 +63,35 @@ class Agent{
         return world.sense(roomNumber);
     }
 
+    void printLastAction() {
+        std::string lastActionString;
+        if (lastAction) {
+            lastActionString = "DERECHA";
+        }
+        else {
+            lastActionString = "ASPIRAR";
+        }
+        printf("  %s\t|\t", lastActionString.c_str());
+    }
+
+
     void printSteps(){
         for(Step step: history){
             std::string cleanString;
             if(step.persection.isClean){
                 cleanString= "LIMPIO";
             }
+            
             else{
                 cleanString="SUCIO";
             }
-            printf("[%c %s]",step.persection.name,cleanString.c_str());
+            printf("[%c %s]", step.persection.name, cleanString.c_str());
+            
         }
         printf("\n");
     }
 
-    void printLastAction(){
-        std::string lastActionString;
-        if(lastAction){
-            lastActionString="DERECHA";
-        }
-        else{
-            lastActionString="ASPIRAR";
-        }
-        printf(" %s \t",lastActionString.c_str());
-    }
-
+   
     bool react(Room room){
         if(room.isClean){
             mover();
@@ -98,18 +102,26 @@ class Agent{
         return room.isClean;
     }
     
-    void clean(int n){
+    void clean(int n) {
         world.clean(n);
     }
 
     void mover(){
         roomNumber++;
     }
+    
+    
 };
 
 int main()
 {
+    printf("---------------------------------------------\n");
+    printf("  Accion \t  Secuencia de percepciones\n");
+    printf("---------------------------------------------\n");
+    
+
     World world=World();
+
     Room first=Room();
     first.name='A';
     first.isClean=true;
@@ -140,6 +152,7 @@ int main()
     Room ten=Room();
     ten.name='J';
     ten.isClean=false;
+
     world.addRoom(&first);
     world.addRoom(&second);
     world.addRoom(&third);
