@@ -5,161 +5,164 @@
 #include <windows.h>
 struct Room
 {
-    public:
+public:
     char name;
     bool isClean;
 };
 
-class World{
+class World {
     std::vector<Room> rooms;
-    public:
-    void addRoom(Room *room){
+public:
+    void addRoom(Room* room) {
         rooms.push_back(*room);
     }
-    void clean(int n){
-        rooms.at(n).isClean=true;
+    void clean(int n) {
+        rooms.at(n).isClean = true;
     }
-    Room sense(int n){
+    Room sense(int n) {
         return rooms.at(n);
     }
-    int size(){
+    int size() {
         return rooms.size();
-        }
+    }
 };
 
 struct Step
 {
     Room persection;
-    bool reaction;    
+    bool reaction;
 };
 
 //set fullscreen
-void toFullscreen(){
-	keybd_event(VK_MENU,
-                0x38,
-                0,
-                0);
-    keybd_event(VK_RETURN,
-                0x1c,
-                0,
-                0);
-    keybd_event(VK_RETURN,
-                0x1c,
-                KEYEVENTF_KEYUP,
-                0);
+void toFullscreen() {
     keybd_event(VK_MENU,
-                0x38,
-                KEYEVENTF_KEYUP,
-                0);
+        0x38,
+        0,
+        0);
+    keybd_event(VK_RETURN,
+        0x1c,
+        0,
+        0);
+    keybd_event(VK_RETURN,
+        0x1c,
+        KEYEVENTF_KEYUP,
+        0);
+    keybd_event(VK_MENU,
+        0x38,
+        KEYEVENTF_KEYUP,
+        0);
     return;
 }
 
-class Agent{
+class Agent {
     std::list<Step> history;
     int roomNumber;
     World& world;
     bool lastAction;
 
-    public:
-    Agent (World& world):world(world){}
-	
-    void start(){
-        roomNumber=0;
-        while(roomNumber<world.size()){
+public:
+    Agent(World& world) :world(world) {}
+
+    void start() {
+        roomNumber = 0;
+        while (roomNumber < world.size()) {
             Step step;
-            step.persection= sense(roomNumber);
-            step.reaction=react(step.persection);
-            lastAction=step.reaction;
+            step.persection = sense(roomNumber);
+            step.reaction = react(step.persection);
+            lastAction = step.reaction;
             history.push_back(step);
-            printLastAction();   
+            printLastAction();
             printSteps();
         }
     }
 
 
-    private:
-    Room sense(int roomNumber){
+private:
+    Room sense(int roomNumber) {
         return world.sense(roomNumber);
     }
 
-    void printSteps(){
-        for(Step step: history){
+    void printSteps() {
+        for (Step step : history) {
             std::string cleanString;
-            if(step.persection.isClean){
-                cleanString= "LIMPIO";
+            if (step.persection.isClean) {
+                cleanString = "LIMPIO";
             }
-            else{
-                cleanString="SUCIO";
+            else {
+                cleanString = "SUCIO";
             }
-            printf("[%c %s]",step.persection.name,cleanString.c_str());
+            printf("[%c %s]", step.persection.name, cleanString.c_str());
         }
         printf("\n");
     }
 
-    void printLastAction(){
+    void printLastAction() {
         std::string lastActionString;
-        if(lastAction){
-            lastActionString="DERECHA";
+        if (lastAction) {
+            lastActionString = "DERECHA";
         }
-        else{
-            lastActionString="ASPIRAR";
+        else {
+            lastActionString = "ASPIRAR";
         }
-        printf(" %s \t",lastActionString.c_str());
+        printf(" %s  | ", lastActionString.c_str());
     }
 
-    bool react(Room room){
-        if(room.isClean){
+    bool react(Room room) {
+        if (room.isClean) {
             mover();
         }
-        else{
+        else {
             clean(roomNumber);
         }
         return room.isClean;
     }
-    
-    void clean(int n){
+
+    void clean(int n) {
         world.clean(n);
     }
 
-    void mover(){
+    void mover() {
         roomNumber++;
     }
 };
 
 int main()
 {
-	toFullscreen();
-    World world=World();
-    Room first=Room();
-    first.name='A';
-    first.isClean=true;
-    Room second=Room();
-    second.name='B';
-    second.isClean=false;
-    Room third=Room();
-    third.name='C';
-    third.isClean=true;
-    Room four=Room();
-    four.name='D';
-    four.isClean=false;
-    Room five=Room();
-    five.name='E';
-    five.isClean=false;
-    Room six=Room();
-    six.name='F';
-    six.isClean=false;
-    Room seven=Room();
-    seven.name='G';
-    seven.isClean=true;
-    Room eight=Room();
-    eight.name='H';
-    eight.isClean=true;
-    Room nine=Room();
-    nine.name='I';
-    nine.isClean=false;
-    Room ten=Room();
-    ten.name='J';
-    ten.isClean=false;
+    printf("---------------------------------------------\n");
+    printf("  Accion \tSecuencia de percepciones\n");
+    printf("---------------------------------------------\n");
+    toFullscreen();
+    World world = World();
+    Room first = Room();
+    first.name = 'A';
+    first.isClean = true;
+    Room second = Room();
+    second.name = 'B';
+    second.isClean = false;
+    Room third = Room();
+    third.name = 'C';
+    third.isClean = true;
+    Room four = Room();
+    four.name = 'D';
+    four.isClean = false;
+    Room five = Room();
+    five.name = 'E';
+    five.isClean = false;
+    Room six = Room();
+    six.name = 'F';
+    six.isClean = false;
+    Room seven = Room();
+    seven.name = 'G';
+    seven.isClean = true;
+    Room eight = Room();
+    eight.name = 'H';
+    eight.isClean = true;
+    Room nine = Room();
+    nine.name = 'I';
+    nine.isClean = false;
+    Room ten = Room();
+    ten.name = 'J';
+    ten.isClean = false;
     world.addRoom(&first);
     world.addRoom(&second);
     world.addRoom(&third);
@@ -170,6 +173,6 @@ int main()
     world.addRoom(&eight);
     world.addRoom(&nine);
     world.addRoom(&ten);
-    Agent agent=Agent(world);
+    Agent agent = Agent(world);
     agent.start();
 }
